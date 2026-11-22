@@ -172,10 +172,7 @@ The dialogs themselves have only been tested by hand.
 
 ## Publishing
 
-The plugin is hosted outside the JOSM SVN and listed on the
-[JOSM plugin sources page](https://josm.openstreetmap.de/wiki/PluginsSource). The list
-needs the jar at a stable URL:
-
+The plugin is hosted outside the JOSM SVN and listed on the [JOSM plugin sources page](https://josm.openstreetmap.de/wiki/PluginsSource). The list needs the jar at a stable URL
 
 The texts already go through `I18n.tr()`, so the plugin can be translated.
 
