@@ -22,7 +22,7 @@ Plugin-Mainversion: $MAIN_VERSION
 Plugin-Minimum-Java-Version: 17
 Plugin-Canloadatruntime: true
 Plugin-Icon: images/routefromgpx.svg
-Plugin-Link: https://wiki.openstreetmap.org/wiki/JOSM/Plugins/routefromgpx
+Plugin-Link: https://github.com/harrahx3/josm-routefromgpx
 Author: routefromgpx contributors
 MF
 jar cfm dist/routefromgpx.jar build/MANIFEST.MF -C build/classes .

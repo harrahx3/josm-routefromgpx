@@ -172,15 +172,23 @@ The dialogs themselves have only been tested by hand.
 
 ## Publishing
 
-To publish the plugin, the JOSM plugin list needs the jar at a stable URL:
+The plugin is hosted outside the JOSM SVN and listed on the
+[JOSM plugin sources page](https://josm.openstreetmap.de/wiki/PluginsSource). The list
+needs the jar at a stable URL:
 
-1. Tag a version and build it with `VERSION=<n> ./build.sh`. `Plugin-Version` is
-   `git describe` by default. `Plugin-Mainversion` (the oldest supported JOSM version)
-   is set in `build.sh`.
-2. Publish the jar, for example as a GitHub release asset.
-3. Add the jar URL to the [JOSM plugin sources list](https://josm.openstreetmap.de/wiki/PluginsSource),
-   and write the wiki page given in `Plugin-Link`
-   (`https://wiki.openstreetmap.org/wiki/JOSM/Plugins/routefromgpx`).
+1. Tag a version and build it: `git tag v0.1.0 && VERSION=0.1.0 ./build.sh`.
+   `Plugin-Version` is `git describe` by default. `Plugin-Mainversion` (the oldest
+   supported JOSM version) is set in `build.sh`.
+2. Create a GitHub release for the tag and attach `dist/routefromgpx.jar`.
+3. Add this line to the PluginsSource page (needs a JOSM Trac account), under a
+   `### by harrahx3` heading, with a way to reach the maintainer:
+
+   ```
+   For issues, please use https://github.com/harrahx3/josm-routefromgpx/issues
+    * https://github.com/harrahx3/josm-routefromgpx/releases/latest/download/routefromgpx.jar
+   ```
+
+   The list is refreshed about every 10 minutes.
 
 The texts already go through `I18n.tr()`, so the plugin can be translated.
 
