@@ -5,6 +5,7 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import static org.openstreetmap.josm.tools.I18n.trn;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -32,6 +33,7 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -43,6 +45,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.HyperlinkEvent;
 import javax.swing.table.TableColumn;
 
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
@@ -63,6 +66,7 @@ import org.openstreetmap.josm.plugins.routefromgpx.core.RouteProfile;
 import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.tools.GBC;
 import org.openstreetmap.josm.tools.Logging;
+import org.openstreetmap.josm.tools.OpenBrowser;
 import org.openstreetmap.josm.tools.Utils;
 
 /**
@@ -177,10 +181,37 @@ final class RoutesDialog extends ExtendedDialog {
         bottom.add(count, BorderLayout.SOUTH);
 
         JPanel content = new JPanel(new BorderLayout(0, 6));
+        content.add(importWarning(), BorderLayout.NORTH);
         content.add(split, BorderLayout.CENTER);
         content.add(bottom, BorderLayout.SOUTH);
         content.setPreferredSize(new Dimension(980, 640));
         return content;
+    }
+
+    /** Reminder that creating many relations from an external source is an import. */
+    private static JEditorPane importWarning() {
+        String guidelines = "<a href=\"https://wiki.openstreetmap.org/wiki/Import/Guidelines\">"
+                + Utils.escapeReservedCharactersHTML(tr("Import guidelines")) + "</a>";
+        String conduct = "<a href=\"https://wiki.openstreetmap.org/wiki/Automated_Edits_code_of_conduct\">"
+                + Utils.escapeReservedCharactersHTML(tr("Automated Edits code of conduct")) + "</a>";
+        JEditorPane warning = new JEditorPane("text/html", "<html><body><b>"
+                + Utils.escapeReservedCharactersHTML(tr("Warning:")) + "</b> "
+                + Utils.escapeReservedCharactersHTML(
+                        tr("Creating many relations at once from an external source is an import. Follow the"))
+                + " " + guidelines + " " + Utils.escapeReservedCharactersHTML(tr("and the")) + " " + conduct + ", "
+                + Utils.escapeReservedCharactersHTML(tr("and check the licence of the data source.")) + "</body></html>");
+        warning.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+        warning.setEditable(false);
+        warning.setOpaque(false);
+        warning.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.ORANGE.darker()),
+                BorderFactory.createEmptyBorder(4, 6, 4, 6)));
+        warning.addHyperlinkListener(e -> {
+            if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED && e.getURL() != null) {
+                OpenBrowser.displayUrl(e.getURL().toString());
+            }
+        });
+        return warning;
     }
 
     private static JLabel help(String text) {
