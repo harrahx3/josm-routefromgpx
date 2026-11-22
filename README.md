@@ -176,10 +176,12 @@ The plugin is hosted outside the JOSM SVN and listed on the
 [JOSM plugin sources page](https://josm.openstreetmap.de/wiki/PluginsSource). The list
 needs the jar at a stable URL:
 
-1. Tag a version and build it: `git tag v0.1.0 && VERSION=0.1.0 ./build.sh`.
-   `Plugin-Version` is `git describe` by default. `Plugin-Mainversion` (the oldest
-   supported JOSM version) is set in `build.sh`.
-2. Create a GitHub release for the tag and attach `dist/routefromgpx.jar`.
+1. Tag a version and push the tag: `git tag v0.1.0 && git push origin v0.1.0`.
+   `Plugin-Mainversion` (the oldest supported JOSM version) is set in `build.sh`.
+2. The GitHub Actions workflow (`.github/workflows/build.yml`) builds and tests the
+   jar, then creates the GitHub release with `routefromgpx.jar` attached.
+   `Plugin-Version` is the tag without its `v`. To build by hand:
+   `VERSION=0.1.0 ./build.sh`.
 3. Add this line to the PluginsSource page (needs a JOSM Trac account), under a
    `### by harrahx3` heading, with a way to reach the maintainer:
 

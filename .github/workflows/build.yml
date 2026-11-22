@@ -1,0 +1,43 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # needed to create the release
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Download JOSM (compile-time dependency)
+        run: curl -fsSL -o "$RUNNER_TEMP/josm.jar" https://josm.openstreetmap.de/josm-tested.jar
+
+      - name: Build and test
+        env:
+          JOSM_JAR: ${{ runner.temp }}/josm.jar
+          VERSION: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
+        run: |
+          # tag v1.2.3 -> Plugin-Version 1.2.3; otherwise build.sh uses git describe
+          if [ -n "$VERSION" ]; then export VERSION="${VERSION#v}"; else unset VERSION; fi
+          ./build.sh test
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: routefromgpx.jar
+          path: dist/routefromgpx.jar
+
+      - name: Create GitHub release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/routefromgpx.jar --title "$GITHUB_REF_NAME" --generate-notes
