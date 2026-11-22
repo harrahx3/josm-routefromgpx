@@ -150,12 +150,25 @@ final class BatchTask extends PleaseWaitRunnable {
             }
             o.warnings.add(tr("similar route(s) already exist:{0}", names.toString().replace("\n - ", " ")));
         }
-        RouteBuilder.Applied applied = RouteBuilder.apply(ds, plan, o.tags, o.warnings);
+        RouteBuilder.Applied applied = RouteBuilder.apply(ds, plan, withGapNote(o.tags, plan), o.warnings);
         o.relation = applied.relation();
         o.splitWays = applied.splitWays();
         o.gaps = plan.gaps;
         o.gapAfterMember = applied.gapAfterMember();
         o.status = Outcome.Status.CREATED;
+    }
+
+    /** The tags, plus a fixme (appended to an existing one) when gaps were left open. */
+    private Map<String, String> withGapNote(Map<String, String> tags, RouteBuilder.Plan plan) {
+        if (!options.markGaps() || plan.gaps.isEmpty()) {
+            return tags;
+        }
+        double total = plan.gaps.stream().mapToDouble(RoutePlanner.Gap::lengthM).sum();
+        String note = "route has " + plan.gaps.size() + " gap(s), about " + Math.round(total)
+                + " m in total, where no way was found: check and connect, or confirm the path";
+        Map<String, String> out = new java.util.LinkedHashMap<>(tags);
+        out.merge("fixme", note, (old, add) -> old.contains(add) ? old : old + "; " + add);
+        return out;
     }
 
     @Override

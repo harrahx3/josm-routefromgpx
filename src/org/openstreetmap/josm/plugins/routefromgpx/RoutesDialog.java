@@ -80,6 +80,7 @@ final class RoutesDialog extends ExtendedDialog {
     private final JComboBox<Options.OnDuplicate> onDuplicate = new JComboBox<>(Options.OnDuplicate.values());
     private final JCheckBox download = new JCheckBox(tr("Download missing OSM data"));
     private final JCheckBox openEditor = new JCheckBox(tr("Open the relation editor (single route)"));
+    private final JCheckBox markGaps = new JCheckBox(tr("Add a fixme tag to relations with unbridged gaps"));
     private final JCheckBox showTracks = new JCheckBox(tr("Show the GPX tracks of the files in a layer"));
     private final JLabel count = new JLabel();
 
@@ -115,6 +116,7 @@ final class RoutesDialog extends ExtendedDialog {
         download.setSelected(o.download());
         openEditor.setSelected(o.openEditor());
         showTracks.setSelected(o.showTracks());
+        markGaps.setSelected(o.markGaps());
 
         preview.setEditable(false);
         preview.setContentType("text/html");
@@ -167,6 +169,7 @@ final class RoutesDialog extends ExtendedDialog {
         options.add(download, GBC.eol().anchor(GBC.WEST));
         options.add(openEditor, GBC.eol().anchor(GBC.WEST));
         options.add(showTracks, GBC.eol().anchor(GBC.WEST));
+        options.add(markGaps, GBC.eol().anchor(GBC.WEST));
         options.add(new JPanel(), GBC.eol().fill(GBC.HORIZONTAL));
 
         JPanel bottom = new JPanel(new BorderLayout());
@@ -657,7 +660,7 @@ final class RoutesDialog extends ExtendedDialog {
 
     Options options() {
         return new Options((Options.OnDuplicate) onDuplicate.getSelectedItem(), download.isSelected(),
-                openEditor.isSelected(), showTracks.isSelected());
+                openEditor.isSelected(), showTracks.isSelected(), markGaps.isSelected());
     }
 
     @Override

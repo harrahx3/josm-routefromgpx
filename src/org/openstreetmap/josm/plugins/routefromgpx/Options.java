@@ -10,7 +10,8 @@ import java.util.Map;
 import org.openstreetmap.josm.spi.preferences.Config;
 
 /** Run options and the preferences that remember them. */
-public record Options(OnDuplicate onDuplicate, boolean download, boolean openEditor, boolean showTracks) {
+public record Options(OnDuplicate onDuplicate, boolean download, boolean openEditor, boolean showTracks,
+                      boolean markGaps) {
 
     static final String PREFIX = "routefromgpx.";
     static final String PREF_COMMON_TAGS = PREFIX + "common_tags";
@@ -19,6 +20,7 @@ public record Options(OnDuplicate onDuplicate, boolean download, boolean openEdi
     static final String PREF_DOWNLOAD = PREFIX + "download";
     static final String PREF_OPEN_EDITOR = PREFIX + "open_editor";
     static final String PREF_SHOW_TRACKS = PREFIX + "show_tracks";
+    static final String PREF_MARK_GAPS = PREFIX + "mark_gaps";
     static final String PREF_LAST_DIR = PREFIX + "last_dir";
     static final String PREF_RECURSIVE = PREFIX + "recursive";
     /** Long tracks are downloaded in boxes of at most this many square degrees, along the track. */
@@ -46,7 +48,8 @@ public record Options(OnDuplicate onDuplicate, boolean download, boolean openEdi
             d = OnDuplicate.ASK;
         }
         return new Options(d, Config.getPref().getBoolean(PREF_DOWNLOAD, true),
-                Config.getPref().getBoolean(PREF_OPEN_EDITOR, true), Config.getPref().getBoolean(PREF_SHOW_TRACKS, true));
+                Config.getPref().getBoolean(PREF_OPEN_EDITOR, true), Config.getPref().getBoolean(PREF_SHOW_TRACKS, true),
+                Config.getPref().getBoolean(PREF_MARK_GAPS, true));
     }
 
     void save() {
@@ -54,6 +57,7 @@ public record Options(OnDuplicate onDuplicate, boolean download, boolean openEdi
         Config.getPref().putBoolean(PREF_DOWNLOAD, download);
         Config.getPref().putBoolean(PREF_OPEN_EDITOR, openEditor);
         Config.getPref().putBoolean(PREF_SHOW_TRACKS, showTracks);
+        Config.getPref().putBoolean(PREF_MARK_GAPS, markGaps);
     }
 
     static Map<String, String> loadCommonTags() {
